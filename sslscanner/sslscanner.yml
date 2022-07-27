@@ -1,0 +1,28 @@
+- hosts: localhost
+  connection: local
+  vars:
+    json_file: ./domains_example.txt
+  tasks:
+    - name: Get a cert from an https port
+      community.crypto.get_certificate:
+        host: "{{ item }}"
+        server_name: "{{ item }}"
+        port: 443
+        timeout: 1
+      delegate_to: localhost
+      run_once: true
+      register: certs
+      with_items: "{{ lookup('file', '{{json_file}}') | from_json }}"
+      ignore_errors: yes
+
+    - name: "Print certificate expiration"
+      ansible.builtin.debug:
+        msg:
+        - "Host: {{item.item}}"
+        - "Subject: {{item.subject}}"
+        - "Issuer {{item.issuer}}"
+        - "Expiring {{ (( item.not_after | to_datetime('%Y%m%d%H%M%SZ')) - (ansible_date_time.iso8601 | to_datetime('%Y-%m-%dT%H:%M:%SZ')) ).days }} days"
+      with_items: "{{certs.results}}"
+      loop_control:
+        label: "{{ item.item }}"
+      when: item.msg is not defined
