@@ -20,5 +20,5 @@ aws route53 list-resource-record-sets --hosted-zone-id <HostedZoneID> --query "R
 Then run ansible-playbook command
 
 ```
-ansible-playbook sslscanner/sslscanner.yml --extra-vars '{"json_file":"./domains_example.txt"}'
+ansible-playbook sslscanner/sslscanner.yml --extra-vars '{"json_file":"./domains.txt"}'
 ```
