@@ -1,4 +1,4 @@
-# Ansible SSL Scanner
+# Ansible SSL/TLS Certificate Scanner
 
 Scan multiple domains SSL certificates and print out informations:
 
